@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krystal.Services.Endpoint",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krystal.Services.Admin", "Krystal.Services.Admin\Krystal.Services.Admin.csproj", "{ACCA2D38-FDAE-4C53-A093-532821AC8D37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krystal.Web", "Krystal.Web\Krystal.Web.csproj", "{10646A81-9F86-4CEA-8B02-CA981158F755}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{ACCA2D38-FDAE-4C53-A093-532821AC8D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACCA2D38-FDAE-4C53-A093-532821AC8D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACCA2D38-FDAE-4C53-A093-532821AC8D37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10646A81-9F86-4CEA-8B02-CA981158F755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10646A81-9F86-4CEA-8B02-CA981158F755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10646A81-9F86-4CEA-8B02-CA981158F755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10646A81-9F86-4CEA-8B02-CA981158F755}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
