@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Krystal.Services.Admin.Database\Krystal.Services.Admin.Database.csproj" />
+    <Folder Include="Links\Commands\CreateLink\" />
+    <Folder Include="Links\Commands\DeleteLink\" />
+    <Folder Include="Links\Commands\UpdateLink\" />
+    <Folder Include="Links\Queries\GetLinkById\" />
+    <Folder Include="Links\Queries\GetLinks\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Krystal.Services.Admin.Domain\Krystal.Services.Admin.Domain.csproj" />
   </ItemGroup>
 
