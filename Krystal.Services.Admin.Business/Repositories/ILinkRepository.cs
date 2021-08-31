@@ -7,7 +7,7 @@ namespace Krystal.Services.Admin.Business.Repositories
 {
     public interface ILinkRepository
     {
-        Task<List<Link>> GetLinks();
+        Task<List<Link>> GetLinks(Guid userId);
 
         Task<Link> GetLinkById(Guid id);
 

@@ -10,6 +10,8 @@ namespace Krystal.Services.Admin.Database.Entities
     {
         public Guid Id { get; set; }
 
+        public Guid UserId { get; set; }
+
         public bool Enabled { get; set; }
 
         public string Slug { get; set; }

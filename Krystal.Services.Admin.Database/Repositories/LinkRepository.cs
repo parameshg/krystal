@@ -25,11 +25,11 @@ namespace Krystal.Services.Admin.Database
             Database = database;
         }
 
-        public Task<List<Link>> GetLinks()
+        public Task<List<Link>> GetLinks(Guid userId)
         {
             var result = new List<Link>();
 
-            var entities = Database.Links.Where(i => i.Id != Guid.Empty).ToList();
+            var entities = Database.Links.Where(i => i.UserId == userId).ToList();
 
             result.AddRange(Mapper.Map<List<Entities.Link>, List<Link>>(entities));
 

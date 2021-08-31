@@ -1,7 +1,12 @@
 ﻿using EnsureThat;
-using Krystal.Services.Admin.Models;
+using Krystal.Services.Admin.Business.Links.Commands.CreateLink;
+using Krystal.Services.Admin.Business.Links.Commands.DeleteLink;
+using Krystal.Services.Admin.Business.Links.Commands.UpdateLink;
+using Krystal.Services.Admin.Business.Links.Queries.GetLinkById;
+using Krystal.Services.Admin.Business.Links.Queries.GetLinks;
+using Krystal.Services.Admin.Domain.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,51 +15,81 @@ namespace Krystal.Services.Admin.Controllers
 {
     public class LinkController : ControllerBase
     {
-        private ILogger<LinkController> Logger { get; }
+        private IMediator Mediator { get; }
 
-        public LinkController(ILogger<LinkController> logger)
+        public LinkController(IMediator mediator)
         {
-            Logger = EnsureArg.IsNotNull(logger);
+            Mediator = EnsureArg.IsNotNull(mediator);
         }
 
         [HttpGet("links")]
-        public Task<List<Link>> GetLinks()
+        public async Task<List<Link>> GetLinks()
         {
             var result = new List<Link>();
 
-            return Task.FromResult(result);
+            var response = await Mediator.Send(new GetLinksRequest { UserId = Guid.Empty });
+
+            result.AddRange(response.Links);
+
+            return result;
         }
 
         [HttpGet("links/{id}")]
-        public Task<Link> GetById(Guid id)
+        public async Task<Link> GetById(Guid id)
         {
             Link result = null;
 
-            return Task.FromResult(result);
+            var response = await Mediator.Send(new GetLinkByIdRequest { Id = id });
+
+            result = response.Link;
+
+            return result;
         }
 
         [HttpPost("links")]
-        public Task<Link> Create(Link model)
+        public async Task<Link> Create(Link model)
         {
             Link result = null;
 
-            return Task.FromResult(result);
+            var response = await Mediator.Send(new CreateLinkRequest { Enabled = model.Enabled, Slug = model.Slug, Url = model.Url, Expiry = model.Expiry });
+
+            if (response.Created)
+            {
+                var entity = await Mediator.Send(new GetLinkByIdRequest { Id = response.LinkId });
+
+                result = entity.Link;
+            }
+
+            return result;
         }
 
         [HttpPost("links/{id}")]
-        public Task<Link> Update(Guid id, Link model)
+        public async Task<Link> Update(Guid id, Link model)
         {
             Link result = null;
 
-            return Task.FromResult(result);
+            var response = await Mediator.Send(new UpdateLinkRequest {  Id = model.Id, Enabled = model.Enabled, Slug = model.Slug, Url = model.Url, Expiry = model.Expiry });
+
+            if (response.Updated)
+            {
+                var entity = await Mediator.Send(new GetLinkByIdRequest { Id = id });
+
+                result = entity.Link;
+            }
+
+            return result;
         }
 
         [HttpDelete("links/{id}")]
-        public Task<bool> Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             var result = false;
 
-            return Task.FromResult(result);
+            var response = await Mediator.Send(new DeleteLinkRequest { LinkId = id });
+
+            result = response.Deleted;
+
+            return result;
         }
     }
 }

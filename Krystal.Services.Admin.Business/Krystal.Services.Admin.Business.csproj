@@ -5,11 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Links\Commands\CreateLink\" />
-    <Folder Include="Links\Commands\DeleteLink\" />
-    <Folder Include="Links\Commands\UpdateLink\" />
-    <Folder Include="Links\Queries\GetLinkById\" />
-    <Folder Include="Links\Queries\GetLinks\" />
+    <PackageReference Include="Ensure.That" Version="10.1.0" />
+    <PackageReference Include="FluentValidation" Version="10.3.3" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
