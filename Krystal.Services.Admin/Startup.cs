@@ -1,5 +1,11 @@
+using System.Reflection;
+using Krystal.Services.Admin.Business;
+using Krystal.Services.Admin.Business.Repositories;
+using Krystal.Services.Admin.Database;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +23,27 @@ namespace Krystal.Services.Admin
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var type = Configuration["Database"];
+
+            switch(type)
+            {
+                case "Memory":
+                    services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase(Configuration["Endpoint"]));
+                    break;
+
+                case "SQLServer":
+                    services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(Configuration["Endpoint"]));
+                    break;
+
+                case "SQLite":
+                    services.AddDbContext<DatabaseContext>(options => options.UseSqlite(Configuration["Endpoint"]));
+                    break;
+            }
+
+            services.AddTransient<ILinkRepository, LinkRepository>();
+
+            services.AddMediatR(typeof(Handler).Assembly);
+
             services.AddControllers();
         }
 
