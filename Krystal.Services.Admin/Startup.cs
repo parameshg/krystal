@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace Krystal.Services.Admin
 {
@@ -44,6 +45,8 @@ namespace Krystal.Services.Admin
 
             services.AddMediatR(typeof(Handler).Assembly);
 
+            services.AddSwaggerGen(cfg => cfg.SwaggerDoc("v1", new OpenApiInfo { Title = "Krystal Admin API", Version = "v1" }));
+
             services.AddControllers();
         }
 
@@ -57,6 +60,10 @@ namespace Krystal.Services.Admin
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(cfg => cfg.SwaggerEndpoint("v1/swagger.json", "Krystal Admin API v1"));
 
             app.UseEndpoints(endpoints =>
             {
