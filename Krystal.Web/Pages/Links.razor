@@ -1,0 +1,42 @@
+@page "/links"
+@inject HttpClient Api
+
+<h3>Links</h3>
+
+@if (links == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Slug</th>
+                <th>Url</th>
+                <th>Expiry</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var link in links)
+            {
+                <tr>
+                    <td>@link.Id</td>
+                    <td>@link.Slug</td>
+                    <td>@link.Url</td>
+                    <td>@link.Expiry</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Link[] links;
+
+    protected override async Task OnInitializedAsync()
+    {
+        links = await Api.GetFromJsonAsync<Link[]>("http://localhost:5000/links");
+    }
+}
