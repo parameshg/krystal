@@ -4,6 +4,7 @@ using Krystal.Services.Admin.Business.Repositories;
 using Krystal.Services.Admin.Database;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +48,14 @@ namespace Krystal.Services.Admin
 
             services.AddSwaggerGen(cfg => cfg.SwaggerDoc("v1", new OpenApiInfo { Title = "Krystal Admin API", Version = "v1" }));
 
+            services.AddCors(cfg => cfg.AddDefaultPolicy(new CorsPolicy
+            {
+                ExposedHeaders = { "*" },
+                Headers = { "*" },
+                Methods = { "*" },
+                Origins = { "*" }
+            }));
+
             services.AddControllers();
         }
 
@@ -64,6 +73,8 @@ namespace Krystal.Services.Admin
             app.UseSwagger();
 
             app.UseSwaggerUI(cfg => cfg.SwaggerEndpoint("v1/swagger.json", "Krystal Admin API v1"));
+
+            app.UseCors();
 
             app.UseEndpoints(endpoints =>
             {
