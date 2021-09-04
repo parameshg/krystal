@@ -31,7 +31,17 @@ namespace Krystal.Services.Admin.Database
 
             var entities = Database.Links.Where(i => i.UserId == userId).ToList();
 
-            result.AddRange(Mapper.Map<List<Entities.Link>, List<Link>>(entities));
+            foreach(var entity in entities)
+            {
+                result.Add(new Link
+                {
+                    Id = entity.Id,
+                    Enabled = entity.Enabled,
+                    Slug = entity.Slug,
+                    Url = entity.Url,
+                    Expiry = entity.Expiry
+                });
+            }
 
             return Task.FromResult(result);
         }
@@ -42,12 +52,22 @@ namespace Krystal.Services.Admin.Database
 
             var entity = Database.Links.FirstOrDefault(i => i.Id == id);
 
-            result = Mapper.Map<Entities.Link, Link>(entity);
+            if (entity != null)
+            {
+                result = new Link
+                {
+                    Id = entity.Id,
+                    Enabled = entity.Enabled,
+                    Slug = entity.Slug,
+                    Url = entity.Url,
+                    Expiry = entity.Expiry
+                };
+            }
 
             return Task.FromResult(result);
         }
 
-        public async Task<Guid> CreateLink(bool enabled, string slug, string url, DateTime? expiry)
+        public async Task<Guid> CreateLink(Guid userId, bool enabled, string slug, string url, DateTime? expiry)
         {
             var result = Guid.Empty;
 
@@ -56,6 +76,7 @@ namespace Krystal.Services.Admin.Database
             Database.Links.Add(new Entities.Link
             {
                 Id = id,
+                UserId = userId,
                 Enabled = enabled,
                 Slug = slug,
                 Url = url,

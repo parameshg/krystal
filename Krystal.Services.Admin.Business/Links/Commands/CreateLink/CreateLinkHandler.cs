@@ -21,11 +21,14 @@ namespace Krystal.Services.Admin.Business.Links.Commands.CreateLink
         {
             var result = new CreateLinkResponse();
 
-            var id = await Repository.CreateLink(request.Enabled, request.Slug, request.Url, request.Expiry);
+            if (request.UserId.HasValue)
+            {
+                var id = await Repository.CreateLink(request.UserId.Value, request.Enabled, request.Slug, request.Url, request.Expiry);
 
-            result.LinkId = id;
+                result.LinkId = id;
 
-            result.Created = id != Guid.NewGuid();
+                result.Created = id != Guid.NewGuid();
+            }
 
             return result;
         }

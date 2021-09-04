@@ -47,11 +47,11 @@ namespace Krystal.Services.Admin.Controllers
         }
 
         [HttpPost("links")]
-        public async Task<Link> Create(Link model)
+        public async Task<Link> Create([FromBody] Link model)
         {
             Link result = null;
 
-            var response = await Mediator.Send(new CreateLinkRequest { Enabled = model.Enabled, Slug = model.Slug, Url = model.Url, Expiry = model.Expiry });
+            var response = await Mediator.Send(new CreateLinkRequest { UserId = Guid.Empty, Enabled = model.Enabled, Slug = model.Slug, Url = model.Url, Expiry = model.Expiry });
 
             if (response.Created)
             {
@@ -63,8 +63,8 @@ namespace Krystal.Services.Admin.Controllers
             return result;
         }
 
-        [HttpPost("links/{id}")]
-        public async Task<Link> Update(Guid id, Link model)
+        [HttpPut("links/{id}")]
+        public async Task<Link> Update(Guid id, [FromBody] Link model)
         {
             Link result = null;
 

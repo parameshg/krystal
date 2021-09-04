@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 
 namespace Krystal.Services.Admin.Business
 {
@@ -12,5 +13,6 @@ namespace Krystal.Services.Admin.Business
 
     public abstract class Request<T> : IRequest, IRequest<T>
     {
+        public Guid? UserId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Krystal.Services.Admin.Business.Repositories
 
         Task<Link> GetLinkById(Guid id);
 
-        Task<Guid> CreateLink(bool enabled, string slug, string url, DateTime? expiry);
+        Task<Guid> CreateLink(Guid userId, bool enabled, string slug, string url, DateTime? expiry);
 
         Task<bool> UpdateLink(Guid id, bool enabled, string slug, string url, DateTime? expiry);
 
