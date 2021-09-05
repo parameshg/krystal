@@ -1,9 +1,10 @@
 @page "/links"
 @inject HttpClient Api
+@inject NavigationManager Navigation
 
 <h3>Links</h3>
 
-@if (links == null)
+@if (_links == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,16 +17,18 @@ else
                 <th>Slug</th>
                 <th>Url</th>
                 <th>Expiry</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var link in links)
+            @foreach (var link in _links)
             {
                 <tr>
                     <td>@link.Id</td>
                     <td>@link.Slug</td>
                     <td>@link.Url</td>
                     <td>@link.Expiry</td>
+                    <td><button @onclick="(e) => OnDelete(link.Id, e)">Delete</button>&nbsp;&nbsp;&nbsp;<button>Edit</button></td>
                 </tr>
             }
         </tbody>
@@ -33,10 +36,23 @@ else
 }
 
 @code {
-    private Link[] links;
+    private Link[] _links;
+
+    private string _baseUrl = "http://localhost:5000";
 
     protected override async Task OnInitializedAsync()
     {
-        links = await Api.GetFromJsonAsync<Link[]>("http://localhost:5000/links");
+        _links = await Api.GetFromJsonAsync<Link[]>($"{_baseUrl}/links");
+    }
+
+    protected async void OnDelete(Guid linkId, MouseEventArgs args)
+    {
+        var response = await Api.DeleteAsync($"{_baseUrl}/links/{linkId}");
+
+        if (response != null && response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/links");
+        }
     }
 }
