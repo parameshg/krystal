@@ -8,6 +8,8 @@ namespace Krystal.Web
 {
     public class Program
     {
+        public static string Endpoint = "http://localhost:8080";
+
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
