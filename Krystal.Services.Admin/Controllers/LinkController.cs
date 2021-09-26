@@ -47,9 +47,9 @@ namespace Krystal.Services.Admin.Controllers
         }
 
         [HttpPost("links")]
-        public async Task<Link> Create([FromBody] Link model)
+        public async Task<IActionResult> Create([FromBody] Link model)
         {
-            Link result = null;
+            IActionResult result = null;
 
             var response = await Mediator.Send(new CreateLinkRequest { UserId = Guid.Empty, Enabled = model.Enabled, Slug = model.Slug, Url = model.Url, Expiry = model.Expiry });
 
@@ -57,7 +57,12 @@ namespace Krystal.Services.Admin.Controllers
             {
                 var entity = await Mediator.Send(new GetLinkByIdRequest { Id = response.LinkId });
 
-                result = entity.Link;
+                result = new OkObjectResult(entity.Link);
+            }
+
+            if (response.Error)
+            {
+                result = new BadRequestObjectResult(response.Exception?.Message);
             }
 
             return result;

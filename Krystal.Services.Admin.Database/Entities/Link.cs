@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Krystal.Services.Admin.Database.Entities
 {
     [Table("Links", Schema = "Admin")]
+    [Index(nameof(Slug), IsUnique = true)]
     [AutoMap(typeof(Domain.Entities.Link))]
     public class Link
     {

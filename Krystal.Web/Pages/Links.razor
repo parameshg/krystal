@@ -13,20 +13,20 @@ else
     <br />
     <table>
         <tr>
-            <td width="100px">URL&nbsp;</td>
-            <td width="100%"><input />&nbsp;</td>
-            <td width="100px">Slug&nbsp;</td>
-            <td width="200px"><input />&nbsp;</td>
-            <td width="100px">Expiry&nbsp;</td>
-            <td width="100px"><input />&nbsp;</td>
-            <td><button @onclick="(e) => OnSave(Guid.Empty, e)">Save</button></td>
+            <td>URL&nbsp;</td>
+            <td><input @bind="@Url" />&nbsp;</td>
+            <td>Slug&nbsp;</td>
+            <td><input @bind="@Slug" />&nbsp;</td>
+            <td>Expiry&nbsp;</td>
+            <td><input @bind="@Expiry" />&nbsp;</td>
+            <td><button @onclick="(e) => OnSave(Id, e)">Save</button></td>
+            <td><button @onclick="(e) => OnClear(e)">Clear</button></td>
         </tr>
     </table>
     <br />
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Slug</th>
                 <th>Url</th>
                 <th>Expiry</th>
@@ -37,11 +37,14 @@ else
             @foreach (var link in _links)
             {
                 <tr>
-                    <td>@link.Id</td>
                     <td>@link.Slug</td>
                     <td>@link.Url</td>
                     <td>@link.Expiry</td>
-                    <td><button @onclick="(e) => OnDelete(link.Id, e)">Delete</button>&nbsp;&nbsp;&nbsp;<button>Edit</button></td>
+                    <td>
+                        <button @onclick="(e) => OnDelete(link.Id, e)">Delete</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <button @onclick="(e) => OnEdit(link.Id, true, link.Url, link.Slug, link.Expiry, e)">Edit</button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -50,15 +53,58 @@ else
 
 @code {
     private Link[] _links;
+    protected Guid Id { get; set; } = Guid.Empty;
+    protected bool Enabled { get; set; }
+    protected string Url { get; set; }
+    protected string Slug { get; set; }
+    protected DateTime? Expiry { get; set; } = DateTime.Now.AddDays(1);
+
 
     protected override async Task OnInitializedAsync()
     {
         _links = await Api.GetFromJsonAsync<Link[]>($"{Program.Endpoint}/links");
     }
 
+    protected void OnEdit(Guid id, bool enabled, string url, string slug, DateTime? expiry, MouseEventArgs args)
+    {
+        Id = id;
+        Enabled = enabled;
+        Url = url;
+        Slug = slug;
+        Expiry = expiry;
+    }
+
+    protected void OnClear(MouseEventArgs args)
+    {
+        Id = Guid.Empty;
+        Enabled = true;
+        Url = string.Empty;
+        Slug = string.Empty;
+        Expiry = DateTime.Now.AddDays(1);
+    }
+
     protected async void OnSave(Guid linkId, MouseEventArgs args)
     {
+        if (linkId == Guid.Empty)
+        {
+            var response = await Api.PostAsJsonAsync($"{Program.Endpoint}/links", new { Id = Id, Enabled = Enabled, Url = Url, Slug = Slug, Expiry = Expiry });
 
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/");
+                Navigation.NavigateTo("/links");
+            }
+        }
+        else
+        {
+            var response = await Api.PutAsJsonAsync($"{Program.Endpoint}/links/{Id}", new { Id = Id, Enabled = Enabled, Url = Url, Slug = Slug, Expiry = Expiry });
+
+            if (response != null && response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/");
+                Navigation.NavigateTo("/links");
+            }
+        }
     }
 
     protected async void OnDelete(Guid linkId, MouseEventArgs args)

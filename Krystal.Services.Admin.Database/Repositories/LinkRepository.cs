@@ -73,19 +73,26 @@ namespace Krystal.Services.Admin.Database
 
             var id = Guid.NewGuid();
 
-            Database.Links.Add(new Entities.Link
+            if (Database.Links.Count(i => i.Slug == slug).Equals(0))
             {
-                Id = id,
-                UserId = userId,
-                Enabled = enabled,
-                Slug = slug,
-                Url = url,
-                Expiry = expiry
-            });
+                Database.Links.Add(new Entities.Link
+                {
+                    Id = id,
+                    UserId = userId,
+                    Enabled = enabled,
+                    Slug = slug,
+                    Url = url,
+                    Expiry = expiry
+                });
 
-            if (await Database.SaveChangesAsync() != 0)
+                if (await Database.SaveChangesAsync() != 0)
+                {
+                    result = id;
+                }
+            }
+            else
             {
-                result = id;
+                throw new Exception("slug not available");
             }
 
             return result;
